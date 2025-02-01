@@ -32,7 +32,7 @@
     .column h3 {
       margin-bottom: 10px;
     }
-    /* Stored Juri area */
+    /* Stored Juri display area */
     #storedJuri {
       margin: 20px 0;
       padding: 10px;
@@ -43,7 +43,7 @@
       margin-right: auto;
       text-align: left;
     }
-    /* Amount and submit button */
+    /* Amount input and submit button area */
     #amountSection {
       display: none;
       margin: 20px 0;
@@ -84,7 +84,7 @@
   </div>
 
   <script>
-    // When the "Juri" button is clicked, display the number selection area and amount section.
+    // Show the number selection area and amount section when "Juri" is clicked.
     document.getElementById("juriBtn").addEventListener("click", function() {
       document.getElementById("numberArea").style.display = "flex";
       document.getElementById("amountSection").style.display = "block";
@@ -113,7 +113,7 @@
     let firstSelections = [];
     let secondSelections = [];
 
-    // Function to update the stored Juri area with all combinations
+    // Update the Stored Juri area with all combinations
     function updateStoredJuri() {
       const storedArea = document.getElementById("juriList");
       let combinations = [];
@@ -126,12 +126,11 @@
       return combinations;
     }
 
-    // Event listener for number buttons to toggle selection
+    // Toggle number selection when a number button is clicked
     document.querySelectorAll(".numBtn").forEach(btn => {
       btn.addEventListener("click", function() {
         const column = this.dataset.column;
         const value = this.dataset.value;
-        // Toggle selection: add if not selected; remove if already selected.
         if (column === "first") {
           const index = firstSelections.indexOf(value);
           if (index === -1) {
@@ -155,7 +154,7 @@
       });
     });
 
-    // Submit button event: calculate the share of the amount for each combination
+    // Submit button event: calculate total amount = (number of combinations) x (entered amount)
     document.getElementById("submitBtn").addEventListener("click", function() {
       const amount = parseFloat(document.getElementById("amountInput").value);
       if (isNaN(amount) || amount <= 0) {
@@ -167,13 +166,17 @@
         alert("Please select at least one number from each column.");
         return;
       }
-      // Divide the amount equally among the combinations
-      const share = amount / combinations.length;
-      let message = "Amount per Judi combination:\n";
+      // Calculate total amount: (number of combinations) multiplied by the entered amount.
+      const total = amount * combinations.length;
+      
+      let message = "Calculated Amounts:\n";
       combinations.forEach(combo => {
-        message += combo + ": " + share.toFixed(2) + "\n";
+        // Each combination gets the entered amount.
+        message += combo + ": " + amount.toFixed(2) + "\n";
       });
-      // Show the result in an alert (user must click OK to dismiss)
+      message += "\nTotal Amount (" + combinations.length + " juri * " + amount.toFixed(2) + "): " + total.toFixed(2);
+      
+      // Show the result in an alert (click OK to dismiss)
       alert(message);
     });
   </script>
