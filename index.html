@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Juri Project with Patti Modes</title>
+  <title>Juri Project with Patti Modes and Backspace</title>
   <style>
+    /* Global styles */
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
@@ -19,21 +20,29 @@
     /* Mode selector buttons */
     .mode-selector {
       margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
     }
-    /* Containers for each mode */
+    /* Mode containers */
     .mode-container {
       display: none;
       border: 1px solid #ccc;
       padding: 10px;
       margin-bottom: 20px;
     }
+    .mode-container h2 {
+      margin-top: 0;
+    }
     .row {
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
       margin: 10px 0;
       position: relative;
     }
-    /* Popup box for patti choices */
+    /* Popup for patti choices */
     .patti-popup {
       position: absolute;
       top: 100%;
@@ -58,45 +67,60 @@
       font-family: monospace;
       flex: 1 0 20%;
     }
-    /* Stored area */
+    /* Stored combinations display */
     .stored-area {
       border: 1px solid #888;
       padding: 10px;
       margin: 10px auto;
-      width: 80%;
+      width: 90%;
       max-width: 500px;
       text-align: left;
       min-height: 40px;
+      word-wrap: break-word;
     }
     /* Amount area */
     .amount-area {
       margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
     }
     input[type="number"] {
       padding: 5px;
       font-size: 16px;
       width: 200px;
     }
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      button, .numBtn {
+        font-size: 14px;
+        padding: 8px 10px;
+      }
+      input[type="number"] {
+        width: 150px;
+      }
+      .patti-popup {
+        width: 200px;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Juri Project with Patti Modes</h1>
+  <h1>Juri Project with Patti Modes and Backspace</h1>
   <div class="mode-selector">
-    <!-- Existing original Juri mode button -->
+    <!-- Mode selector buttons -->
     <button id="btnJuri">Juri (Figure se Figure)</button>
-    <!-- New mode buttons -->
     <button id="btnFiguresPatti">Figures Patti<br/>(First row: Figure, Second row: Patti)</button>
     <button id="btnPattiPatti">Patti se Patti<br/>(Both rows: Patti)</button>
+    <button id="btnPattiFigure">Patti se Figure<br/>(First row: Patti, Second row: Figure)</button>
   </div>
 
-  <!-- ORIGINAL JURI MODE (unchanged) -->
+  <!-- ORIGINAL JURI MODE: Figure se Figure -->
   <div id="containerJuri" class="mode-container">
     <h2>Figure se Figure Mode (Original)</h2>
-    <div id="juriNumberArea" class="row">
-      <!-- Two columns: first and second row (each with digit buttons) -->
-      <div id="juriFirstRow"></div>
-    </div>
-    <div id="juriSecondRow" class="row"></div>
+    <div class="row" id="juriFirstRow"></div>
+    <div class="row" id="juriSecondRow"></div>
     <div class="stored-area">
       <strong>Stored Juri:</strong>
       <p id="juriStored">None</p>
@@ -104,18 +128,15 @@
     <div class="amount-area">
       <input type="number" id="juriAmount" placeholder="Enter amount" />
       <button id="juriSubmit">Submit</button>
+      <button id="juriBackspace">Backspace</button>
     </div>
   </div>
 
-  <!-- FIGURES PATTI MODE: First row is figure (immediate selection), second row is patti -->
+  <!-- FIGURES PATTI MODE: First row: Figure, Second row: Patti -->
   <div id="containerFiguresPatti" class="mode-container">
     <h2>Figures Patti Mode (First row: Figure, Second row: Patti)</h2>
-    <div id="figPattiFirstRow" class="row">
-      <!-- First row: figure buttons -->
-    </div>
-    <div id="figPattiSecondRow" class="row">
-      <!-- Second row: digit buttons that require patti selection -->
-    </div>
+    <div class="row" id="figPattiFirstRow"></div>
+    <div class="row" id="figPattiSecondRow"></div>
     <div class="stored-area">
       <strong>Stored Combination(s):</strong>
       <p id="figPattiStored">None</p>
@@ -123,18 +144,15 @@
     <div class="amount-area">
       <input type="number" id="figPattiAmount" placeholder="Enter amount" />
       <button id="figPattiSubmit">Submit</button>
+      <button id="figPattiBackspace">Backspace</button>
     </div>
   </div>
 
-  <!-- PATTI SE PATTI MODE: Both rows are patti selection -->
+  <!-- PATTI SE PATTI MODE: Both rows: Patti -->
   <div id="containerPattiPatti" class="mode-container">
     <h2>Patti se Patti Mode (Both rows: Patti)</h2>
-    <div id="pattiPattiFirstRow" class="row">
-      <!-- First row: digit buttons that require patti selection -->
-    </div>
-    <div id="pattiPattiSecondRow" class="row">
-      <!-- Second row: digit buttons that require patti selection -->
-    </div>
+    <div class="row" id="pattiPattiFirstRow"></div>
+    <div class="row" id="pattiPattiSecondRow"></div>
     <div class="stored-area">
       <strong>Stored Combination(s):</strong>
       <p id="pattiPattiStored">None</p>
@@ -142,30 +160,37 @@
     <div class="amount-area">
       <input type="number" id="pattiPattiAmount" placeholder="Enter amount" />
       <button id="pattiPattiSubmit">Submit</button>
+      <button id="pattiPattiBackspace">Backspace</button>
+    </div>
+  </div>
+
+  <!-- PATTI SE FIGURE MODE: First row: Patti, Second row: Figure -->
+  <div id="containerPattiFigure" class="mode-container">
+    <h2>Patti se Figure Mode (First row: Patti, Second row: Figure)</h2>
+    <div class="row" id="pattiFigureFirstRow"></div>
+    <div class="row" id="pattiFigureSecondRow"></div>
+    <div class="stored-area">
+      <strong>Stored Combination(s):</strong>
+      <p id="pattiFigureStored">None</p>
+    </div>
+    <div class="amount-area">
+      <input type="number" id="pattiFigureAmount" placeholder="Enter amount" />
+      <button id="pattiFigureSubmit">Submit</button>
+      <button id="pattiFigureBackspace">Backspace</button>
     </div>
   </div>
 
   <script>
-    // Allowed digits (as strings) in lottery order.
+    /***********************
+     * Global – Allowed Digits and Patti Groups
+     ***********************/
     const allowedDigits = ["1","2","3","4","5","6","7","8","9","0"];
+    // Our custom rank: digits 1-9 as usual; 0 is treated as 10.
+    const rank = { "1":1, "2":2, "3":3, "4":4, "5":5, "6":6, "7":7, "8":8, "9":9, "0":10 };
 
-    // -------------------------------
-    // 1. Generate Patti Groups Globally
-    // -------------------------------
-    // We generate all three-digit combinations in nondecreasing order (by our custom ranking)
-    // and then group them by the unit digit of the sum.
-    const pattiGroups = {}; // will be an object with keys "1", "2", ..., "0" (as strings)
-    allowedDigits.forEach(d => pattiGroups[d] = []);  // initialize groups
-
-    // Our custom rank: digits 1-9 have their numeric value, 0 is treated as 10.
-    const rank = {
-      "1": 1, "2": 2, "3": 3, "4": 4, "5": 5,
-      "6": 6, "7": 7, "8": 8, "9": 9, "0": 10
-    };
-
+    // Generate all three-digit combinations (non-decreasing in our lottery order)
     function generateAllPattiCombinations() {
       const combos = [];
-      // Use all allowed digits for each position (we allow "0" in any position here)
       for (let i = 0; i < allowedDigits.length; i++) {
         const d1 = allowedDigits[i];
         for (let j = i; j < allowedDigits.length; j++) {
@@ -178,72 +203,93 @@
       }
       return combos;
     }
-
+    // Sum of digits (using normal values)
     function sumOfDigits(combo) {
-      return combo.split('').reduce((s, d) => s + parseInt(d,10), 0);
+      return combo.split('').reduce((s, d) => s + parseInt(d, 10), 0);
     }
-
+    // Generate and group by patti (unit digit of sum)
+    const pattiGroups = {};
+    allowedDigits.forEach(d => pattiGroups[d] = []);
     function generatePattiGroups() {
       const allCombos = generateAllPattiCombinations();
-      // Group by (sum % 10) as string. (For our use, we assume group key equals the digit clicked.)
       allCombos.forEach(combo => {
-        const s = sumOfDigits(combo);
-        const key = (s % 10).toString();
+        const key = (sumOfDigits(combo) % 10).toString();
         pattiGroups[key].push(combo);
       });
-      // Sort each group numerically (as numbers)
+      // Sort each group numerically
       for (const key in pattiGroups) {
         pattiGroups[key].sort((a, b) => parseInt(a) - parseInt(b));
       }
     }
-
     generatePattiGroups();
-    // Now pattiGroups["1"] is an array of 22 numbers (as strings) corresponding to patti 1, etc.
 
-    // -------------------------------
-    // 2. Mode Switching
-    // -------------------------------
-    const containerJuri = document.getElementById("containerJuri");
-    const containerFiguresPatti = document.getElementById("containerFiguresPatti");
-    const containerPattiPatti = document.getElementById("containerPattiPatti");
+    /***********************
+     * Mode Switching
+     ***********************/
+    const containers = {
+      juri: document.getElementById("containerJuri"),
+      figPatti: document.getElementById("containerFiguresPatti"),
+      pattiPatti: document.getElementById("containerPattiPatti"),
+      pattiFigure: document.getElementById("containerPattiFigure")
+    };
 
-    document.getElementById("btnJuri").addEventListener("click", () => {
-      containerJuri.style.display = "block";
-      containerFiguresPatti.style.display = "none";
-      containerPattiPatti.style.display = "none";
-    });
-    document.getElementById("btnFiguresPatti").addEventListener("click", () => {
-      containerJuri.style.display = "none";
-      containerFiguresPatti.style.display = "block";
-      containerPattiPatti.style.display = "none";
-    });
-    document.getElementById("btnPattiPatti").addEventListener("click", () => {
-      containerJuri.style.display = "none";
-      containerFiguresPatti.style.display = "none";
-      containerPattiPatti.style.display = "block";
-    });
+    function showMode(mode) {
+      for (const key in containers) {
+        containers[key].style.display = (key === mode) ? "block" : "none";
+      }
+    }
+    document.getElementById("btnJuri").addEventListener("click", () => showMode("juri"));
+    document.getElementById("btnFiguresPatti").addEventListener("click", () => showMode("figPatti"));
+    document.getElementById("btnPattiPatti").addEventListener("click", () => showMode("pattiPatti"));
+    document.getElementById("btnPattiFigure").addEventListener("click", () => showMode("pattiFigure"));
+    // Show original mode by default.
+    showMode("juri");
 
-    // For convenience, show the original mode by default.
-    containerJuri.style.display = "block";
+    /***********************
+     * Helper: Create Digit Button (for a given row)
+     ***********************/
+    function createDigitButton(digit, onClickCallback) {
+      const btn = document.createElement("button");
+      btn.textContent = digit;
+      btn.className = "numBtn";
+      btn.addEventListener("click", onClickCallback);
+      return btn;
+    }
+    // Helper: Remove any existing popup in a container
+    function removePopup(container) {
+      container.querySelectorAll(".patti-popup").forEach(p => p.remove());
+    }
+    // Helper: Create a patti-popup for a given digit.
+    // When a patti option is clicked, callback(selectedPatti) is called.
+    function createPattiPopup(digit, callback) {
+      const popup = document.createElement("div");
+      popup.className = "patti-popup";
+      const group = pattiGroups[digit] || [];
+      group.forEach(pattiNum => {
+        const span = document.createElement("span");
+        span.textContent = pattiNum;
+        span.addEventListener("click", () => {
+          callback(pattiNum);
+        });
+        popup.appendChild(span);
+      });
+      return popup;
+    }
 
-    // -------------------------------
-    // 3. Original Juri Mode (Figure se Figure)
-    // (This remains as in your previous implementation.)
-    // -------------------------------
+    /***********************
+     * 1. Original Juri Mode (Figure se Figure)
+     * Selections are toggled and the stored combinations are computed as cross‐product.
+     * For backspace, we simply clear all selections.
+     ***********************/
     const juriFirstRowDiv = document.getElementById("juriFirstRow");
     const juriSecondRowDiv = document.getElementById("juriSecondRow");
     const juriStoredP = document.getElementById("juriStored");
     let juriFirstSelections = [];
     let juriSecondSelections = [];
 
-    // Create buttons for both rows in original mode.
+    // Create first row digit buttons
     allowedDigits.forEach(digit => {
-      const btn = document.createElement("button");
-      btn.textContent = digit;
-      btn.className = "numBtn";
-      btn.dataset.row = "first";
-      btn.addEventListener("click", function() {
-        // Toggle selection for first row
+      const btn = createDigitButton(digit, function() {
         if (juriFirstSelections.includes(digit)) {
           juriFirstSelections = juriFirstSelections.filter(x => x !== digit);
           btn.style.backgroundColor = "";
@@ -255,12 +301,9 @@
       });
       juriFirstRowDiv.appendChild(btn);
     });
+    // Create second row digit buttons
     allowedDigits.forEach(digit => {
-      const btn = document.createElement("button");
-      btn.textContent = digit;
-      btn.className = "numBtn";
-      btn.dataset.row = "second";
-      btn.addEventListener("click", function() {
+      const btn = createDigitButton(digit, function() {
         if (juriSecondSelections.includes(digit)) {
           juriSecondSelections = juriSecondSelections.filter(x => x !== digit);
           btn.style.backgroundColor = "";
@@ -273,7 +316,6 @@
       juriSecondRowDiv.appendChild(btn);
     });
     function updateJuriStored() {
-      // Build cross-product
       let combos = [];
       juriFirstSelections.forEach(f => {
         juriSecondSelections.forEach(s => {
@@ -295,23 +337,26 @@
       const total = amt * combos.length;
       alert("Total Amount: " + total.toFixed(2));
     });
+    document.getElementById("juriBackspace").addEventListener("click", function() {
+      juriFirstSelections = [];
+      juriSecondSelections = [];
+      // Reset button backgrounds
+      juriFirstRowDiv.querySelectorAll("button").forEach(b => b.style.backgroundColor = "");
+      juriSecondRowDiv.querySelectorAll("button").forEach(b => b.style.backgroundColor = "");
+      updateJuriStored();
+    });
 
-    // -------------------------------
-    // 4. Figures Patti Mode (First row: Figure, Second row: Patti)
-    // -------------------------------
+    /***********************
+     * 2. Figures Patti Mode (First row: Figure, Second row: Patti)
+     ***********************/
     const figPattiFirstRowDiv = document.getElementById("figPattiFirstRow");
     const figPattiSecondRowDiv = document.getElementById("figPattiSecondRow");
     const figPattiStoredP = document.getElementById("figPattiStored");
-    let figPattiFirstSelections = [];  // store figure digits (first row)
-    let figPattiSecondSelections = []; // store chosen patti (from second row)
-
-    // First row: figure buttons (clicking them selects immediately)
+    let figPattiFirstSelections = [];
+    let figPattiSecondSelections = [];
+    // First row: figure buttons (toggled)
     allowedDigits.forEach(digit => {
-      const btn = document.createElement("button");
-      btn.textContent = digit;
-      btn.className = "numBtn";
-      btn.addEventListener("click", function() {
-        // Toggle selection in first row
+      const btn = createDigitButton(digit, function() {
         if (figPattiFirstSelections.includes(digit)) {
           figPattiFirstSelections = figPattiFirstSelections.filter(x => x !== digit);
           btn.style.backgroundColor = "";
@@ -323,23 +368,11 @@
       });
       figPattiFirstRowDiv.appendChild(btn);
     });
-
-    // Second row: figure buttons that when clicked open a popup for patti selection.
+    // Second row: clicking a button opens a patti popup.
     allowedDigits.forEach(digit => {
-      const btn = document.createElement("button");
-      btn.textContent = digit;
-      btn.className = "numBtn";
-      btn.dataset.row = "second";
-      btn.addEventListener("click", function(e) {
-        // Remove any existing popup in this row
+      const btn = createDigitButton(digit, function(e) {
         removePopup(figPattiSecondRowDiv);
-        // Create a popup for patti options for the clicked digit.
         const popup = createPattiPopup(digit, (selectedPatti) => {
-          // When user clicks a patti option, store it.
-          // For this mode, we store an object combining:
-          // first row: already selected figure(s) remain independent,
-          // second row: the chosen patti for this digit.
-          // Here, we treat each click as an independent combination:
           figPattiSecondSelections.push(selectedPatti);
           updateFigPattiStored();
           popup.remove();
@@ -348,14 +381,11 @@
       });
       figPattiSecondRowDiv.appendChild(btn);
     });
-
     function updateFigPattiStored() {
-      // For Figures Patti mode, we combine each figure (from row 1)
-      // with each chosen patti (from row 2) to form a combination (concatenated as string)
       let combos = [];
       figPattiFirstSelections.forEach(f => {
         figPattiSecondSelections.forEach(p => {
-          combos.push(f + "-" + p); // using a dash for clarity
+          combos.push(f + "-" + p);
         });
       });
       figPattiStoredP.textContent = combos.length ? combos.join(", ") : "None";
@@ -373,22 +403,25 @@
       const total = amt * combos.length;
       alert("Total Amount: " + total.toFixed(2));
     });
+    document.getElementById("figPattiBackspace").addEventListener("click", function() {
+      figPattiFirstSelections = [];
+      figPattiSecondSelections = [];
+      figPattiFirstRowDiv.querySelectorAll("button").forEach(b => b.style.backgroundColor = "");
+      removePopup(figPattiSecondRowDiv);
+      updateFigPattiStored();
+    });
 
-    // -------------------------------
-    // 5. Patti se Patti Mode (Both rows require patti selection)
-    // -------------------------------
+    /***********************
+     * 3. Patti se Patti Mode (Both rows: Patti)
+     ***********************/
     const pattiPattiFirstRowDiv = document.getElementById("pattiPattiFirstRow");
     const pattiPattiSecondRowDiv = document.getElementById("pattiPattiSecondRow");
     const pattiPattiStoredP = document.getElementById("pattiPattiStored");
     let pattiPattiFirstSelections = [];
     let pattiPattiSecondSelections = [];
-
-    // For each row in this mode, clicking a digit opens a popup for patti selection.
+    // First row: clicking a digit opens a popup.
     allowedDigits.forEach(digit => {
-      const btn = document.createElement("button");
-      btn.textContent = digit;
-      btn.className = "numBtn";
-      btn.addEventListener("click", function() {
+      const btn = createDigitButton(digit, function() {
         removePopup(pattiPattiFirstRowDiv);
         const popup = createPattiPopup(digit, (selectedPatti) => {
           pattiPattiFirstSelections.push(selectedPatti);
@@ -399,11 +432,9 @@
       });
       pattiPattiFirstRowDiv.appendChild(btn);
     });
+    // Second row: clicking a digit opens a popup.
     allowedDigits.forEach(digit => {
-      const btn = document.createElement("button");
-      btn.textContent = digit;
-      btn.className = "numBtn";
-      btn.addEventListener("click", function() {
+      const btn = createDigitButton(digit, function() {
         removePopup(pattiPattiSecondRowDiv);
         const popup = createPattiPopup(digit, (selectedPatti) => {
           pattiPattiSecondSelections.push(selectedPatti);
@@ -436,32 +467,78 @@
       const total = amt * combos.length;
       alert("Total Amount: " + total.toFixed(2));
     });
+    document.getElementById("pattiPattiBackspace").addEventListener("click", function() {
+      pattiPattiFirstSelections = [];
+      pattiPattiSecondSelections = [];
+      removePopup(pattiPattiFirstRowDiv);
+      removePopup(pattiPattiSecondRowDiv);
+      updatePattiPattiStored();
+    });
 
-    // -------------------------------
-    // Helper functions for Popup
-    // -------------------------------
-    // Creates a popup element showing the 22 patti options for a given digit.
-    // callback is called with the selected patti (a string) when the user clicks one.
-    function createPattiPopup(digit, callback) {
-      const popup = document.createElement("div");
-      popup.className = "patti-popup";
-      // Get the patti group for the clicked digit.
-      const group = pattiGroups[digit] || [];
-      group.forEach(pattiNum => {
-        const span = document.createElement("span");
-        span.textContent = pattiNum;
-        span.addEventListener("click", () => {
-          callback(pattiNum);
+    /***********************
+     * 4. Patti se Figure Mode (First row: Patti, Second row: Figure)
+     ***********************/
+    const pattiFigureFirstRowDiv = document.getElementById("pattiFigureFirstRow");
+    const pattiFigureSecondRowDiv = document.getElementById("pattiFigureSecondRow");
+    const pattiFigureStoredP = document.getElementById("pattiFigureStored");
+    let pattiFigureFirstSelections = [];
+    let pattiFigureSecondSelections = [];
+    // First row: clicking a digit opens a popup.
+    allowedDigits.forEach(digit => {
+      const btn = createDigitButton(digit, function() {
+        removePopup(pattiFigureFirstRowDiv);
+        const popup = createPattiPopup(digit, (selectedPatti) => {
+          pattiFigureFirstSelections.push(selectedPatti);
+          updatePattiFigureStored();
+          popup.remove();
         });
-        popup.appendChild(span);
+        btn.parentElement.appendChild(popup);
       });
-      return popup;
+      pattiFigureFirstRowDiv.appendChild(btn);
+    });
+    // Second row: figure buttons (toggled).
+    allowedDigits.forEach(digit => {
+      const btn = createDigitButton(digit, function() {
+        if (pattiFigureSecondSelections.includes(digit)) {
+          pattiFigureSecondSelections = pattiFigureSecondSelections.filter(x => x !== digit);
+          btn.style.backgroundColor = "";
+        } else {
+          pattiFigureSecondSelections.push(digit);
+          btn.style.backgroundColor = "lightblue";
+        }
+        updatePattiFigureStored();
+      });
+      pattiFigureSecondRowDiv.appendChild(btn);
+    });
+    function updatePattiFigureStored() {
+      let combos = [];
+      pattiFigureFirstSelections.forEach(fp => {
+        pattiFigureSecondSelections.forEach(f => {
+          combos.push(fp + "-" + f);
+        });
+      });
+      pattiFigureStoredP.textContent = combos.length ? combos.join(", ") : "None";
     }
-    // Remove any popup elements within a given container.
-    function removePopup(container) {
-      const existing = container.querySelectorAll(".patti-popup");
-      existing.forEach(p => p.remove());
-    }
+    document.getElementById("pattiFigureSubmit").addEventListener("click", function() {
+      const amt = parseFloat(document.getElementById("pattiFigureAmount").value);
+      if (isNaN(amt) || amt <= 0) { alert("Enter a valid amount."); return; }
+      let combos = [];
+      pattiFigureFirstSelections.forEach(fp => {
+        pattiFigureSecondSelections.forEach(f => {
+          combos.push(fp + "-" + f);
+        });
+      });
+      if (combos.length === 0) { alert("No combinations selected."); return; }
+      const total = amt * combos.length;
+      alert("Total Amount: " + total.toFixed(2));
+    });
+    document.getElementById("pattiFigureBackspace").addEventListener("click", function() {
+      pattiFigureFirstSelections = [];
+      pattiFigureSecondSelections = [];
+      removePopup(pattiFigureFirstRowDiv);
+      pattiFigureSecondRowDiv.querySelectorAll("button").forEach(b => b.style.backgroundColor = "");
+      updatePattiFigureStored();
+    });
   </script>
 </body>
 </html>
