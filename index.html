@@ -4,7 +4,80 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Responsive Calculator</title>
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f0f0f0;
+      margin: 0;
+    }
+
+    .calculator {
+      width: 100%;
+      max-width: 400px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    #result {
+      width: 100%;
+      height: 80px;
+      border: none;
+      padding: 10px;
+      font-size: 1.5em;
+      text-align: right;
+      background-color: #f9f9f9;
+      outline: none;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background-color: #ddd;
+    }
+
+    .btn {
+      padding: 20px;
+      font-size: 1.2em;
+      border: none;
+      background-color: #fff;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .btn:hover {
+      background-color: #f0f0f0;
+    }
+
+    .operator {
+      background-color: #f8d7da;
+    }
+
+    .operator:hover {
+      background-color: #f5c6cb;
+    }
+
+    .btn.active {
+      background-color: #cce5ff;
+    }
+
+    @media (max-width: 480px) {
+      #result {
+        font-size: 1.2em;
+      }
+
+      .btn {
+        padding: 15px;
+        font-size: 1em;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="calculator">
@@ -31,6 +104,52 @@
       <button class="btn" onclick="calculate()">=</button>
     </div>
   </div>
-  <script src="script.js"></script>
+
+  <script>
+    let resultField = document.getElementById('result');
+    let longPressTimeout;
+
+    function append(value) {
+      resultField.value += value;
+      highlightButton(value);
+    }
+
+    function calculate() {
+      try {
+        resultField.value = eval(resultField.value.replace(/×/g, '*').replace(/÷/g, '/'));
+      } catch {
+        resultField.value = "Error";
+      }
+    }
+
+    function clearAll() {
+      resultField.value = '';
+    }
+
+    function backspace() {
+      resultField.value = resultField.value.slice(0, -1);
+    }
+
+    function startClear() {
+      longPressTimeout = setTimeout(() => {
+        clearAll();
+      }, 1000); // Long press duration: 1 second
+    }
+
+    function stopClear() {
+      clearTimeout(longPressTimeout);
+    }
+
+    function highlightButton(value) {
+      const buttons = document.querySelectorAll('.btn');
+      buttons.forEach((btn) => btn.classList.remove('active'));
+      buttons.forEach((btn) => {
+        if (btn.textContent === value || btn.textContent === value.replace('*', '×').replace('/', '÷')) {
+          btn.classList.add('active');
+          setTimeout(() => btn.classList.remove('active'), 200); // Remove after 200ms
+        }
+      });
+    }
+  </script>
 </body>
 </html>
