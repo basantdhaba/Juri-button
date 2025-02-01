@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Responsive Calculator</title>
+  <title>Juri Project</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -11,144 +11,183 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      background-color: #f0f0f0;
       margin: 0;
-    }
-
-    .calculator {
-      width: 100%;
-      max-width: 400px;
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      overflow: hidden;
-    }
-
-    #result {
-      width: 100%;
-      height: 80px;
-      border: none;
-      padding: 10px;
-      font-size: 1.5em;
-      text-align: right;
       background-color: #f9f9f9;
-      outline: none;
     }
 
-    .buttons {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background-color: #ddd;
+    .container {
+      max-width: 600px;
+      width: 100%;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
     }
 
     .btn {
-      padding: 20px;
-      font-size: 1.2em;
+      padding: 10px 20px;
+      font-size: 16px;
       border: none;
-      background-color: #fff;
+      border-radius: 5px;
+      background: #f0f0f0;
       cursor: pointer;
-      transition: background-color 0.2s;
+      transition: background 0.3s ease;
     }
 
     .btn:hover {
-      background-color: #f0f0f0;
-    }
-
-    .operator {
-      background-color: #f8d7da;
-    }
-
-    .operator:hover {
-      background-color: #f5c6cb;
+      background: #e0e0e0;
     }
 
     .btn.active {
-      background-color: #cce5ff;
+      background: #cce5ff;
+    }
+
+    #juri-area {
+      min-height: 50px;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 16px;
+      background: #f7f7f7;
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
     }
 
     @media (max-width: 480px) {
-      #result {
-        font-size: 1.2em;
-      }
-
       .btn {
-        padding: 15px;
-        font-size: 1em;
+        font-size: 14px;
+        padding: 8px 15px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="calculator">
-    <input type="text" id="result" readonly>
-    <div class="buttons">
-      <button class="btn" onclick="clearAll()">C</button>
-      <button class="btn" onclick="backspace()" onmousedown="startClear()" onmouseup="stopClear()">⌫</button>
-      <button class="btn" onclick="append('%')">%</button>
-      <button class="btn operator" onclick="append('/')">÷</button>
-      <button class="btn" onclick="append('7')">7</button>
-      <button class="btn" onclick="append('8')">8</button>
-      <button class="btn" onclick="append('9')">9</button>
-      <button class="btn operator" onclick="append('*')">×</button>
-      <button class="btn" onclick="append('4')">4</button>
-      <button class="btn" onclick="append('5')">5</button>
-      <button class="btn" onclick="append('6')">6</button>
-      <button class="btn operator" onclick="append('-')">−</button>
-      <button class="btn" onclick="append('1')">1</button>
-      <button class="btn" onclick="append('2')">2</button>
-      <button class="btn" onclick="append('3')">3</button>
-      <button class="btn operator" onclick="append('+')">+</button>
-      <button class="btn" onclick="append('0')">0</button>
-      <button class="btn" onclick="append('.')">.</button>
-      <button class="btn" onclick="calculate()">=</button>
+  <div class="container">
+    <div class="title">Juri Project</div>
+    <div class="row" id="first-row">
+      <button class="btn" onclick="selectNumber(1)">1</button>
+      <button class="btn" onclick="selectNumber(2)">2</button>
+      <button class="btn" onclick="selectNumber(3)">3</button>
+      <button class="btn" onclick="selectNumber(4)">4</button>
+      <button class="btn" onclick="selectNumber(5)">5</button>
+      <button class="btn" onclick="selectNumber(6)">6</button>
+      <button class="btn" onclick="selectNumber(7)">7</button>
+      <button class="btn" onclick="selectNumber(8)">8</button>
+      <button class="btn" onclick="selectNumber(9)">9</button>
+      <button class="btn" onclick="selectNumber(0)">0</button>
+    </div>
+    <div class="row" id="second-row">
+      <button class="btn" onclick="selectSecondRow(1)">1</button>
+      <button class="btn" onclick="selectSecondRow(2)">2</button>
+      <button class="btn" onclick="selectSecondRow(3)">3</button>
+      <button class="btn" onclick="selectSecondRow(4)">4</button>
+      <button class="btn" onclick="selectSecondRow(5)">5</button>
+      <button class="btn" onclick="selectSecondRow(6)">6</button>
+      <button class="btn" onclick="selectSecondRow(7)">7</button>
+      <button class="btn" onclick="selectSecondRow(8)">8</button>
+      <button class="btn" onclick="selectSecondRow(9)">9</button>
+      <button class="btn" onclick="selectSecondRow(0)">0</button>
+    </div>
+    <div id="juri-area"></div>
+    <div class="action-buttons">
+      <button class="btn" onclick="calculateJuri()">Submit</button>
+      <button class="btn" onclick="clearJuri()">Clear</button>
+      <button class="btn" onclick="showPatti()">Patti se Figure</button>
     </div>
   </div>
 
   <script>
-    let resultField = document.getElementById('result');
-    let longPressTimeout;
+    let firstRowSelection = null;
+    let secondRowSelections = [];
+    let juriList = [];
+    const juriArea = document.getElementById("juri-area");
 
-    function append(value) {
-      resultField.value += value;
-      highlightButton(value);
+    // Highlight button and select number for the first row
+    function selectNumber(num) {
+      const buttons = document.querySelectorAll("#first-row .btn");
+      buttons.forEach((btn) => btn.classList.remove("active"));
+      buttons[num === 0 ? 9 : num - 1].classList.add("active");
+      firstRowSelection = num;
+      juriArea.innerHTML = `Selected Patti for: ${num}`;
     }
 
-    function calculate() {
-      try {
-        resultField.value = eval(resultField.value.replace(/×/g, '*').replace(/÷/g, '/'));
-      } catch {
-        resultField.value = "Error";
+    // Highlight button and select numbers for the second row
+    function selectSecondRow(num) {
+      const button = document.querySelector(`#second-row .btn:nth-child(${num + 1})`);
+      if (!secondRowSelections.includes(num)) {
+        secondRowSelections.push(num);
+        button.classList.add("active");
+      } else {
+        secondRowSelections = secondRowSelections.filter((n) => n !== num);
+        button.classList.remove("active");
       }
     }
 
-    function clearAll() {
-      resultField.value = '';
+    // Calculate Juri
+    function calculateJuri() {
+      if (firstRowSelection === null || secondRowSelections.length === 0) {
+        alert("Please select from both rows.");
+        return;
+      }
+
+      juriList = [];
+      for (const num of secondRowSelections) {
+        juriList.push(`${firstRowSelection}${num}`);
+      }
+
+      juriArea.innerHTML = `Juri: ${juriList.join(", ")}`;
+      alert(`Total Amount for Juri: ${juriList.length}`);
     }
 
-    function backspace() {
-      resultField.value = resultField.value.slice(0, -1);
+    // Clear Juri
+    function clearJuri() {
+      firstRowSelection = null;
+      secondRowSelections = [];
+      juriList = [];
+      juriArea.innerHTML = "";
+      document.querySelectorAll(".btn").forEach((btn) => btn.classList.remove("active"));
     }
 
-    function startClear() {
-      longPressTimeout = setTimeout(() => {
-        clearAll();
-      }, 1000); // Long press duration: 1 second
+    // Show Patti for selected number
+    function showPatti() {
+      if (firstRowSelection === null) {
+        alert("Please select a number from the first row.");
+        return;
+      }
+
+      const pattiNumbers = calculatePatti(firstRowSelection);
+      alert(`Patti for ${firstRowSelection}: ${pattiNumbers.join(", ")}`);
     }
 
-    function stopClear() {
-      clearTimeout(longPressTimeout);
-    }
-
-    function highlightButton(value) {
-      const buttons = document.querySelectorAll('.btn');
-      buttons.forEach((btn) => btn.classList.remove('active'));
-      buttons.forEach((btn) => {
-        if (btn.textContent === value || btn.textContent === value.replace('*', '×').replace('/', '÷')) {
-          btn.classList.add('active');
-          setTimeout(() => btn.classList.remove('active'), 200); // Remove after 200ms
+    // Calculate 22 Patti for a number
+    function calculatePatti(num) {
+      const pattiNumbers = [];
+      for (let i = 0; i <= 9; i++) {
+        for (let j = 0; j <= 9; j++) {
+          if (i + j + num === 6) pattiNumbers.push(`${num}${i}${j}`);
         }
-      });
+      }
+      return pattiNumbers;
     }
   </script>
 </body>
