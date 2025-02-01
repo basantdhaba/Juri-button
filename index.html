@@ -1,1 +1,181 @@
-.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Juri Project</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    /* General button styling */
+    .button, .numBtn {
+      padding: 10px 15px;
+      margin: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    /* Container for the two columns of numbers */
+    #numberArea {
+      display: none;
+      justify-content: center;
+      gap: 50px;
+      margin: 20px 0;
+    }
+    .column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .column h3 {
+      margin-bottom: 10px;
+    }
+    /* Stored Juri area */
+    #storedJuri {
+      margin: 20px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      width: 80%;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+    }
+    /* Amount and submit button */
+    #amountSection {
+      display: none;
+      margin: 20px 0;
+    }
+    #amountInput {
+      padding: 5px;
+      font-size: 16px;
+      width: 200px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Juri button -->
+  <button id="juriBtn" class="button">Juri</button>
+
+  <!-- Number selection area -->
+  <div id="numberArea">
+    <div id="firstColumn" class="column">
+      <h3>First Column</h3>
+      <!-- Buttons will be created dynamically -->
+    </div>
+    <div id="secondColumn" class="column">
+      <h3>Second Column</h3>
+      <!-- Buttons will be created dynamically -->
+    </div>
+  </div>
+
+  <!-- Stored Juri display -->
+  <div id="storedJuri">
+    <strong>Stored Juri:</strong>
+    <p id="juriList">None</p>
+  </div>
+
+  <!-- Amount input and submit button -->
+  <div id="amountSection">
+    <input type="number" id="amountInput" placeholder="Enter amount" />
+    <button id="submitBtn" class="button">Submit</button>
+  </div>
+
+  <script>
+    // When the "Juri" button is clicked, display the number selection area and amount section.
+    document.getElementById("juriBtn").addEventListener("click", function() {
+      document.getElementById("numberArea").style.display = "flex";
+      document.getElementById("amountSection").style.display = "block";
+    });
+
+    // Create number buttons for both columns
+    const firstColumnDiv = document.getElementById("firstColumn");
+    const secondColumnDiv = document.getElementById("secondColumn");
+    const digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+
+    // Function to create buttons dynamically
+    function createButtons(columnDiv, columnName) {
+      digits.forEach(digit => {
+        const btn = document.createElement("button");
+        btn.textContent = digit;
+        btn.className = "numBtn";
+        btn.dataset.column = columnName;
+        btn.dataset.value = digit;
+        columnDiv.appendChild(btn);
+      });
+    }
+    createButtons(firstColumnDiv, "first");
+    createButtons(secondColumnDiv, "second");
+
+    // Arrays to store selections from each column
+    let firstSelections = [];
+    let secondSelections = [];
+
+    // Function to update the stored Juri area with all combinations
+    function updateStoredJuri() {
+      const storedArea = document.getElementById("juriList");
+      let combinations = [];
+      firstSelections.forEach(f => {
+        secondSelections.forEach(s => {
+          combinations.push(f + s);
+        });
+      });
+      storedArea.textContent = combinations.length > 0 ? combinations.join(", ") : "None";
+      return combinations;
+    }
+
+    // Event listener for number buttons to toggle selection
+    document.querySelectorAll(".numBtn").forEach(btn => {
+      btn.addEventListener("click", function() {
+        const column = this.dataset.column;
+        const value = this.dataset.value;
+        // Toggle selection: add if not selected; remove if already selected.
+        if (column === "first") {
+          const index = firstSelections.indexOf(value);
+          if (index === -1) {
+            firstSelections.push(value);
+            this.style.backgroundColor = "lightblue";
+          } else {
+            firstSelections.splice(index, 1);
+            this.style.backgroundColor = "";
+          }
+        } else {
+          const index = secondSelections.indexOf(value);
+          if (index === -1) {
+            secondSelections.push(value);
+            this.style.backgroundColor = "lightblue";
+          } else {
+            secondSelections.splice(index, 1);
+            this.style.backgroundColor = "";
+          }
+        }
+        updateStoredJuri();
+      });
+    });
+
+    // Submit button event: calculate the share of the amount for each combination
+    document.getElementById("submitBtn").addEventListener("click", function() {
+      const amount = parseFloat(document.getElementById("amountInput").value);
+      if (isNaN(amount) || amount <= 0) {
+        alert("Please enter a valid amount.");
+        return;
+      }
+      const combinations = updateStoredJuri();
+      if (combinations.length === 0) {
+        alert("Please select at least one number from each column.");
+        return;
+      }
+      // Divide the amount equally among the combinations
+      const share = amount / combinations.length;
+      let message = "Amount per Judi combination:\n";
+      combinations.forEach(combo => {
+        message += combo + ": " + share.toFixed(2) + "\n";
+      });
+      // Show the result in an alert (user must click OK to dismiss)
+      alert(message);
+    });
+  </script>
+</body>
+</html>
