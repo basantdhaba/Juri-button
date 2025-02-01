@@ -10,14 +10,12 @@
       text-align: center;
       margin: 20px;
     }
-    /* General button styling */
     .button, .numBtn {
       padding: 10px 15px;
       margin: 5px;
       font-size: 16px;
       cursor: pointer;
     }
-    /* Container for the two columns of numbers */
     #numberArea {
       display: none;
       justify-content: center;
@@ -32,7 +30,6 @@
     .column h3 {
       margin-bottom: 10px;
     }
-    /* Stored Juri display area */
     #storedJuri {
       margin: 20px 0;
       padding: 10px;
@@ -43,7 +40,6 @@
       margin-right: auto;
       text-align: left;
     }
-    /* Amount input and submit button area */
     #amountSection {
       display: none;
       margin: 20px 0;
@@ -84,18 +80,17 @@
   </div>
 
   <script>
-    // Show the number selection area and amount section when "Juri" is clicked.
+    // Display the number selection area and amount input when "Juri" is clicked.
     document.getElementById("juriBtn").addEventListener("click", function() {
       document.getElementById("numberArea").style.display = "flex";
       document.getElementById("amountSection").style.display = "block";
     });
 
-    // Create number buttons for both columns
+    // Dynamically create number buttons for both columns.
     const firstColumnDiv = document.getElementById("firstColumn");
     const secondColumnDiv = document.getElementById("secondColumn");
     const digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
 
-    // Function to create buttons dynamically
     function createButtons(columnDiv, columnName) {
       digits.forEach(digit => {
         const btn = document.createElement("button");
@@ -109,11 +104,11 @@
     createButtons(firstColumnDiv, "first");
     createButtons(secondColumnDiv, "second");
 
-    // Arrays to store selections from each column
+    // Arrays to store the selected numbers from each column.
     let firstSelections = [];
     let secondSelections = [];
 
-    // Update the Stored Juri area with all combinations
+    // Function to update and display the Stored Juri area with all combinations.
     function updateStoredJuri() {
       const storedArea = document.getElementById("juriList");
       let combinations = [];
@@ -126,7 +121,7 @@
       return combinations;
     }
 
-    // Toggle number selection when a number button is clicked
+    // Toggle selection when a number button is clicked.
     document.querySelectorAll(".numBtn").forEach(btn => {
       btn.addEventListener("click", function() {
         const column = this.dataset.column;
@@ -154,7 +149,7 @@
       });
     });
 
-    // Submit button event: calculate total amount = (number of combinations) x (entered amount)
+    // Submit button event: calculate total amount = (number of combinations) x (entered amount).
     document.getElementById("submitBtn").addEventListener("click", function() {
       const amount = parseFloat(document.getElementById("amountInput").value);
       if (isNaN(amount) || amount <= 0) {
@@ -166,18 +161,11 @@
         alert("Please select at least one number from each column.");
         return;
       }
-      // Calculate total amount: (number of combinations) multiplied by the entered amount.
+      // Calculate the total amount by multiplying the number of combinations with the entered amount.
       const total = amount * combinations.length;
       
-      let message = "Calculated Amounts:\n";
-      combinations.forEach(combo => {
-        // Each combination gets the entered amount.
-        message += combo + ": " + amount.toFixed(2) + "\n";
-      });
-      message += "\nTotal Amount (" + combinations.length + " juri * " + amount.toFixed(2) + "): " + total.toFixed(2);
-      
-      // Show the result in an alert (click OK to dismiss)
-      alert(message);
+      // Only show the total amount in the popup.
+      alert("Total Amount: " + total.toFixed(2));
     });
   </script>
 </body>
